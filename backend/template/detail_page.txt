@@ -1,0 +1,1 @@
+<!DOCTYPE html><meta charset="UTF-8"><script src="../scripts/config.js"></script><script src="../scripts/generate.js"></script><link href="../styles/detail_page.css" rel="stylesheet" type="text/css" /><head><h1>%s</h1></head><body onload="generate_page();"><p>--------------------</p><div id="List"></div><br /><a href="../main.html">Back</a></body>

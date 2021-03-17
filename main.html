@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<head></head>
+<body onload="onload();">
+    <h1>提交页面</h1>
+    <h2><a href="new.html">创建新任务</a></h2>
+</body>
+
+<script src="scripts/config.js"></script>
+<script>
+    function onload() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", urls["datelist_url"], true);
+        xhr.send();
+        xhr.onreadystatechange = function (e) {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                content = JSON.parse(xhr.response)["all"];
+                for(index in content){
+                    page_name = content[index];
+                    rNode = document.getElementsByTagName("body")[0]
+                    
+                    divNode = document.createElement("div")
+
+                    spanNode1 = document.createElement("span");
+                    aNode = document.createElement("a");
+                    aNode.href = "pages/"+page_name;
+                    tNode1 = document.createTextNode(page_name.substring(0, 10));
+                    aNode.appendChild(tNode1);
+                    spanNode1.appendChild(aNode);
+
+                    spanNode2 = document.createElement("span");
+                    tNode2 = document.createTextNode("|");
+                    spanNode2.appendChild(tNode2);
+
+                    divNode.appendChild(spanNode1);
+                    divNode.appendChild(spanNode2);
+
+                    rNode.appendChild(divNode);
+                    
+                }
+            }
+        };
+    }
+</script>
+
+<style>
+    a {
+        text-decoration: none;
+        color: #00bbbb
+    }
+    a:visited {color: #00aaaa};
+    a:active {color: #00bbbb}
+    body {
+        font-family: Monospace, STFangsong;
+        font-size: 16px;
+    } 
+    .status {
+	color: #00aa00;
+    }
+</style>

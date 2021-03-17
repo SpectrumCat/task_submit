@@ -1,0 +1,4 @@
+pages/*.html
+backend/files
+scripts/config.js
+backend/__pycache__/

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+
+<head></head>
+
+<body>
+    <h1></h1>
+    <input class="new" type="button" value="添加新任务" onclick="add();" />
+    <input class="new" type="button" value="提交全部" onclick="submit();" />
+    <span ><a href="main.html">Back</a></span>
+</body>
+
+<script>
+    function add() {
+        divNode = document.createElement("div");
+
+        nameNode = document.createElement("span");
+        tNode1 = document.createTextNode("名称");
+        nameNode.appendChild(tNode1);
+
+        brNode1 = document.createElement("br");
+        brNode2 = document.createElement("br");
+
+        discNode = document.createElement("span");
+        tNode2 = document.createTextNode("描述");
+        discNode.appendChild(tNode2);
+
+        //==============================
+
+        tNameNode = document.createElement("span");
+        iNameNode = document.createElement("textarea");
+        iNameNode.rows = "1";
+        iNameNode.cols = "40";
+        iNameNode.onfocus = "this.blur()";
+        iNameNode.style = "resize:none";
+
+        tNameNode.appendChild(iNameNode);
+
+        tDiscNode = document.createElement("span");
+        iDiscNode = document.createElement("textarea");
+        iDiscNode.rows = "3";
+        iDiscNode.cols = "60";
+        iDiscNode.onfocus = "this.blur()";
+        iDiscNode.style = "resize:none";
+
+        tDiscNode.appendChild(iDiscNode);
+
+        tdeleteNode = document.createElement("span");
+        deleteNode = document.createElement("input");
+        deleteNode.type = "button";
+        deleteNode.value = "删除该项";
+        deleteNode.onclick = function () { del(this); };
+        tdeleteNode.appendChild(deleteNode);
+
+        //===============================
+
+        divNode.appendChild(nameNode);
+        divNode.appendChild(document.createElement("br"));
+        divNode.appendChild(document.createElement("br"));
+        divNode.appendChild(tNameNode);
+        divNode.appendChild(document.createElement("br"));
+        divNode.appendChild(document.createElement("br"));
+        divNode.appendChild(discNode);
+        divNode.appendChild(document.createElement("br"));
+        divNode.appendChild(document.createElement("br"));
+        divNode.appendChild(tDiscNode);
+        divNode.appendChild(tdeleteNode);
+
+        bodyNode = document.getElementsByTagName("body")[0];
+        bodyNode.appendChild(divNode);
+    };
+    function del(event) {
+        divNode = event.parentNode.parentNode;
+        bodyNode = divNode.parentNode;
+        bodyNode.removeChild(divNode);
+    }
+    function submit() {
+        var tasks = document.getElementsByTagName("div");
+        var date = getDate();
+        content = [];
+        for (var index = 0; index < tasks.length; index=index+1) {
+            console.log(index);
+            var id = getID(index + 1);
+            task = tasks[index];
+            nodes = task.children;
+            nameNode = nodes[3].children[0];
+            discNode = nodes[9].children[0];
+            task_content = {"id":id+(index+1).toString().padStart(3,0), "name": nameNode.value, "disc": discNode.value }
+            content.push(task_content);
+        }
+        var result = JSON.stringify({"content":content});
+
+        var formData = new FormData();
+        formData.append('date', date);
+        formData.append('info', result);
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://123.57.175.130:8080/create", true);
+        xhr.send(formData);
+        xhr.onreadystatechange = function (e) {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                console.log(xhr.response);
+            }
+        };
+
+    }
+    function getID() {
+        var date = new Date(Date.now());
+        var year = date.getFullYear().toString().padStart(4,0);
+        var month = (date.getMonth()+1).toString().padStart(2,0);
+        var day = date.getDate().toString().padStart(2,0);
+        console.log(year)
+        console.log(month)
+        console.log(day)
+        return year + month + day;
+    }
+    function getDate() {
+        var date = new Date();
+        var year = date.getFullYear().toString().padStart(4,0);
+        var month = (date.getMonth()+1).toString().padStart(2,0);
+        var day = date.getDate().toString().padStart(2,0);
+        return year + '-' + month + '-' + day;
+    }
+</script>
+
+<style>
+    a {
+        text-decoration: none;
+        color: #00bbbb
+    }
+
+    a:visited {
+        color: #00aaaa
+    }
+
+    ;
+
+    a:active {
+        color: #00bbbb
+    }
+
+    body {
+        font-family: Monospace, SimHei;
+    }
+
+    .status {
+        color: #00aa00;
+    }
+
+    div {
+        border-style: solid;
+        border-bottom: 1px solid;
+        box-sizing: border-box;
+        display: block;
+        padding: 20px;
+        border-right-width: 0;
+        border-left-width: 0;
+        border-top-width: 0;
+    }
+
+    .new {
+        margin-left: 20px;
+        padding: 10px;
+    }
+
+    textarea {
+        font-size: 16px;
+        resize: none;
+    }
+
+    span {
+        font-size: 16px;
+        padding: 5px;
+        margin-left: 10px;
+    }
+</style>
